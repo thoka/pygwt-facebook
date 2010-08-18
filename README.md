@@ -1,0 +1,3 @@
+this is a first automatic translation of gwt-facebook by http://gitbub.com/thoka/java2python
+
+comments welcome; will help to improve the translator ...
