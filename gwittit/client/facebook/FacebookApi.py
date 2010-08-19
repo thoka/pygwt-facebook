@@ -679,19 +679,20 @@ class FacebookApi(Object):
     @java.private
     @java.typed(String, JavaScriptObject, AsyncCallback)
     def friendsGetGeneric(self, method, params, callback):
-        ac = class _anonymous(AsyncCallback):
-                 
-                 @java.typed(Throwable)
-                 def onFailure(self, caught):
-                     callback.onFailure(caught)
-                 
-                 @java.typed(JavaScriptObject)
-                 def onSuccess(self, jso):
-                     if u"{}".equals(JSONObject(jso).toString()):
-                         callback.onSuccess(Collections.EMPTY_LIST)
-                     else:
-                         jsArray = jso.cast()
-                         callback.onSuccess(Util.convertNumberArray(jsArray))
+        class _anonymous(AsyncCallback):
+            
+            @java.typed(Throwable)
+            def onFailure(self, caught):
+                callback.onFailure(caught)
+            
+            @java.typed(JavaScriptObject)
+            def onSuccess(self, jso):
+                if u"{}".equals(JSONObject(jso).toString()):
+                    callback.onSuccess(Collections.EMPTY_LIST)
+                else:
+                    jsArray = jso.cast()
+                    callback.onSuccess(Util.convertNumberArray(jsArray))
+        ac = _anonymous()
         self.callMethod(method, params, ac)
     
     @java.typed(String, AsyncCallback)
@@ -892,20 +893,21 @@ class FacebookApi(Object):
         """
         p = self.getDefaultParams()
         types = NotificationRequest.NotificationType.values()
-        internCallback = class _anonymous(AsyncCallback):
-                             
-                             @java.typed(Throwable)
-                             def onFailure(self, caught):
-                                 callback.onFailure(caught)
-                             
-                             @java.typed(JavaScriptObject)
-                             def onSuccess(self, jso):
-                                 resultList = ArrayList((NotificationRequest),)
-                                 result = JSONObject(jso)
-                                 for t in types:
-                                     if result.isObject().get(java.str(t)) is not None:
-                                         resultList.add(NotificationRequest(java.str(t), result.isObject().get(java.str(t))))
-                                 callback.onSuccess(resultList)
+        class _anonymous(AsyncCallback):
+            
+            @java.typed(Throwable)
+            def onFailure(self, caught):
+                callback.onFailure(caught)
+            
+            @java.typed(JavaScriptObject)
+            def onSuccess(self, jso):
+                resultList = ArrayList((NotificationRequest),)
+                result = JSONObject(jso)
+                for t in types:
+                    if result.isObject().get(java.str(t)) is not None:
+                        resultList.add(NotificationRequest(java.str(t), result.isObject().get(java.str(t))))
+                callback.onSuccess(resultList)
+        internCallback = _anonymous()
         self.callMethod(u"notifications.get", p.getJavaScriptObject(), internCallback)
     
     @java.typed(Long, Boolean, AsyncCallback)
@@ -928,23 +930,24 @@ class FacebookApi(Object):
         are not included.
         """
         j = Json().put(u"start_time", startTime).put(u"include_read", includeRead)
-        internCallback = class _anonymous(AsyncCallback):
-                             
-                             @java.typed(Throwable)
-                             def onFailure(self, caught):
-                                 callback.onFailure(caught)
-                             
-                             @java.typed(JavaScriptObject)
-                             def onSuccess(self, jso):
-                                 resultList = ArrayList((Notification),)
-                                 result = JSONObject(jso)
-                                 v = result.isObject().get(u"notifications")
-                                 a = v.isArray()
-                                 i = 0
-                                 while a is not None and i < a.size():
-                                     i+= 1
-                                     resultList.add(Notification(a.get(i).isObject()))
-                                 callback.onSuccess(resultList)
+        class _anonymous(AsyncCallback):
+            
+            @java.typed(Throwable)
+            def onFailure(self, caught):
+                callback.onFailure(caught)
+            
+            @java.typed(JavaScriptObject)
+            def onSuccess(self, jso):
+                resultList = ArrayList((Notification),)
+                result = JSONObject(jso)
+                v = result.isObject().get(u"notifications")
+                a = v.isArray()
+                i = 0
+                while a is not None and i < a.size():
+                    i+= 1
+                    resultList.add(Notification(a.get(i).isObject()))
+                callback.onSuccess(resultList)
+        internCallback = _anonymous()
         self.callMethod(u"notifications.getList", j.getJavaScriptObject(), internCallback)
     
     @java.overloaded
@@ -1073,18 +1076,19 @@ class FacebookApi(Object):
         j.put(u"subject", subject)
         j.put(u"text", text)
         j.put(u"fbml", fbml)
-        internCallback = class _anonymous(AsyncCallback):
-                             
-                             @java.typed(Throwable)
-                             def onFailure(self, caught):
-                                 callback.onFailure(caught)
-                             
-                             @java.typed(StringResult)
-                             def onSuccess(self, sr):
-                                 uids = ArrayList((Long),)
-                                 for s in sr.getResult().split(u","):
-                                     uids.add(Long(s))
-                                 callback.onSuccess(uids)
+        class _anonymous(AsyncCallback):
+            
+            @java.typed(Throwable)
+            def onFailure(self, caught):
+                callback.onFailure(caught)
+            
+            @java.typed(StringResult)
+            def onSuccess(self, sr):
+                uids = ArrayList((Long),)
+                for s in sr.getResult().split(u","):
+                    uids.add(Long(s))
+                callback.onSuccess(uids)
+        internCallback = _anonymous()
         self.callMethodRetObject(u"notifications.sendEmail", j.getJavaScriptObject(), StringResult.__class__, internCallback)
     
     @java.overloaded
@@ -1380,11 +1384,12 @@ class FacebookApi(Object):
         """
         GWT.log(u"users_hasAppPermission: " + java.str(permission), None)
         j = Json().put(u"ext_perm", java.str(permission))
-        nativeCallback = class _anonymous(Callback):
-                             
-                             @java.typed(JavaScriptObject)
-                             def onSuccess(self, jso):
-                                 callback.onSuccess(u"1".equals(java.str(jso)))
+        class _anonymous(Callback):
+            
+            @java.typed(JavaScriptObject)
+            def onSuccess(self, jso):
+                callback.onSuccess(u"1".equals(java.str(jso)))
+        nativeCallback = _anonymous(callback)
         self.callMethod(u"users.hasAppPermission", j.getJavaScriptObject(), nativeCallback)
     
     @java.typed(Long, AsyncCallback)

@@ -200,27 +200,28 @@ class FacebookConnect(Object):
         Show permission dialog to user. You might want to use FbPromptPermission
         instead {@link FbPromptPermission}
         """
-        permissionCallback = class _anonymous(AsyncCallback):
-                                 
-                                 @java.typed(Throwable)
-                                 def onFailure(self, t):
-                                     Window.alert(java.str(FacebookConnect.__class__) + u": showPermissionDialog failed " + t)
-                                 
-                                 @java.typed(JavaScriptObject)
-                                 def onSuccess(self, j):
-                                     sr = j.cast()
-                                     res = sr.getResult()
-                                     if res == None:
-                                         callback.onSuccess(False)
-                                     elif res == None:
-                                         callback.onSuccess(False)
-                                     elif u"".equals(res.trim()):
-                                         callback.onSuccess(False)
-                                     elif permission == FacebookApi.Permission.valueOf(res):
-                                         callback.onSuccess(True)
-                                     else:
-                                         callback.onSuccess(False) #  Callback used when user is asked for a permission. The response is a
-                                                                   #  string that equals the permission we ask for.
+        class _anonymous(AsyncCallback):
+            
+            @java.typed(Throwable)
+            def onFailure(self, t):
+                Window.alert(java.str(FacebookConnect.__class__) + u": showPermissionDialog failed " + t)
+            
+            @java.typed(JavaScriptObject)
+            def onSuccess(self, j):
+                sr = j.cast()
+                res = sr.getResult()
+                if res == None:
+                    callback.onSuccess(False)
+                elif res == None:
+                    callback.onSuccess(False)
+                elif u"".equals(res.trim()):
+                    callback.onSuccess(False)
+                elif permission == FacebookApi.Permission.valueOf(res):
+                    callback.onSuccess(True)
+                else:
+                    callback.onSuccess(False)
+        permissionCallback = _anonymous() #  Callback used when user is asked for a permission. The response is a
+                                          #  string that equals the permission we ask for.
         self.showPermissionDialogNative(java.str(permission), permissionCallback)
     
     @java.static
@@ -244,15 +245,16 @@ class FacebookConnect(Object):
         
         @see http://wiki.developers.facebook.com/index.php/JS_API_M_FB.Connect.RequireSession
         """
-        nativeCallback = class _anonymous(AsyncCallback):
-                             
-                             @java.typed(Throwable)
-                             def onFailure(self, t):
-                                 Window.alert(java.str(FacebookConnect.__class__) + u": requireSession failed " + t) #  TODO: Better error handling here.
-                             
-                             @java.typed(JavaScriptObject)
-                             def onSuccess(self, jv):
-                                 callback.onSuccess(Boolean(java.str(jv)))
+        class _anonymous(AsyncCallback):
+            
+            @java.typed(Throwable)
+            def onFailure(self, t):
+                Window.alert(java.str(FacebookConnect.__class__) + u": requireSession failed " + t) #  TODO: Better error handling here.
+            
+            @java.typed(JavaScriptObject)
+            def onSuccess(self, jv):
+                callback.onSuccess(Boolean(java.str(jv)))
+        nativeCallback = _anonymous()
         self.requireSessionNative(nativeCallback, isUserActionHint)
     
     @requireSession.register
@@ -267,15 +269,16 @@ class FacebookConnect(Object):
         
         @see http://wiki.developers.facebook.com/index.php/JS_API_M_FB.Connect.RequireSession
         """
-        nativeCallback = class _anonymous(AsyncCallback):
-                             
-                             @java.typed(Throwable)
-                             def onFailure(self, t):
-                                 Window.alert(java.str(FacebookConnect.__class__) + u": requireSession failed " + t) #  TODO: Better error handling here.
-                             
-                             @java.typed(JavaScriptObject)
-                             def onSuccess(self, jv):
-                                 callback.onSuccess(Boolean(java.str(jv)))
+        class _anonymous(AsyncCallback):
+            
+            @java.typed(Throwable)
+            def onFailure(self, t):
+                Window.alert(java.str(FacebookConnect.__class__) + u": requireSession failed " + t) #  TODO: Better error handling here.
+            
+            @java.typed(JavaScriptObject)
+            def onSuccess(self, jv):
+                callback.onSuccess(Boolean(java.str(jv)))
+        nativeCallback = _anonymous()
         self.requireSessionNative(nativeCallback, True)
     
     @java.static
