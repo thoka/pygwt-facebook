@@ -30,15 +30,16 @@ class Friends_getLists(Showcase):
         outer = VerticalPanel()
         outer.getElement().setId(self.__class__.method)
         self.addLoader(outer)
-        self.apiClient.friendsGetLists(class anonymous(AsyncCallback)():
-                                           
-                                           @java.typed(Throwable)
-                                           def onFailure(self, caught):
-                                               self.handleFailure(caught)
-                                           
-                                           @java.typed(List)
-                                           def onSuccess(self, result):
-                                               self.removeLoader(outer)
-                                               for fl in result:
-                                                   outer.add(HTML(java.str(fl.getFlid()) + u"/" + fl.getName()))) #  Call facebook
+        class _anonymous(AsyncCallback):
+            
+            @java.typed(Throwable)
+            def onFailure(self, caught):
+                self.handleFailure(caught)
+            
+            @java.typed(List)
+            def onSuccess(self, result):
+                self.removeLoader(outer)
+                for fl in result:
+                    outer.add(HTML(java.str(fl.getFlid()) + u"/" + fl.getName()))
+        self.apiClient.friendsGetLists(_anonymous()) #  Call facebook
         self.initWidget(outer)

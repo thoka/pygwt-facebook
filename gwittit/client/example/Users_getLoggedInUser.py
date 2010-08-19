@@ -27,17 +27,18 @@ class Users_getLoggedInUser(Showcase):
         """
         outer = VerticalPanel()
         self.addLoader(outer)
-        self.apiClient.usersGetLoggedInUser(class anonymous(AsyncCallback)():
-                                                
-                                                @java.typed(Throwable)
-                                                def onFailure(self, caught):
-                                                    self.handleFailure(caught)
-                                                
-                                                @java.typed(Long)
-                                                def onSuccess(self, uid):
-                                                    self.removeLoader(outer)
-                                                    outer.add(HTML(u"You are UID : " + java.str(uid)))
-                                                    outer.add(HTML(u"ApiKey: " + java.str(self.apiClient.getApiKey())))
-                                                    outer.add(HTML(u"SessionRecord: uid: " + java.str(self.apiClient.getSessionRecord().getUid())))
-                                                    outer.add(HTML(u"Session Valid ? " + java.str(self.apiClient.isSessionValid()))))
+        class _anonymous(AsyncCallback):
+            
+            @java.typed(Throwable)
+            def onFailure(self, caught):
+                self.handleFailure(caught)
+            
+            @java.typed(Long)
+            def onSuccess(self, uid):
+                self.removeLoader(outer)
+                outer.add(HTML(u"You are UID : " + java.str(uid)))
+                outer.add(HTML(u"ApiKey: " + java.str(self.apiClient.getApiKey())))
+                outer.add(HTML(u"SessionRecord: uid: " + java.str(self.apiClient.getSessionRecord().getUid())))
+                outer.add(HTML(u"Session Valid ? " + java.str(self.apiClient.isSessionValid())))
+        self.apiClient.usersGetLoggedInUser(_anonymous())
         self.initWidget(outer)

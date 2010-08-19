@@ -34,15 +34,16 @@ class Friends_get(Showcase):
         flow = FlowPanel()
         flow.setWidth(u"500px")
         flow.getElement().setId(u"friendsget")
-        self.apiClient.friendsGet(class anonymous(AsyncCallback)():
-                                      
-                                      @java.typed(Throwable)
-                                      def onFailure(self, caught):
-                                          self.handleFailure(caught)
-                                      
-                                      @java.typed(List)
-                                      def onSuccess(self, result):
-                                          outer.remove(self.getLoader())
-                                          p = ProfilePicsPanel(result)
-                                          outer.add(p)) #  Call facebook
+        class _anonymous(AsyncCallback):
+            
+            @java.typed(Throwable)
+            def onFailure(self, caught):
+                self.handleFailure(caught)
+            
+            @java.typed(List)
+            def onSuccess(self, result):
+                outer.remove(self.getLoader())
+                p = ProfilePicsPanel(result)
+                outer.add(p)
+        self.apiClient.friendsGet(_anonymous()) #  Call facebook
         self.initWidget(outer)

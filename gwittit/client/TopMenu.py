@@ -55,9 +55,10 @@ class TopMenu(Composite):
         tmp.setWidget(pic)
         self.loginInfo.add(tmp)
         logout = Anchor(u"Logout")
-        logout.addClickHandler(class anonymous(ClickHandler)():
-                                   
-                                   @java.typed(ClickEvent)
-                                   def onClick(self, event):
-                                       FacebookConnect.logoutAndRedirect(u"/"))
+        class _anonymous(ClickHandler):
+            
+            @java.typed(ClickEvent)
+            def onClick(self, event):
+                FacebookConnect.logoutAndRedirect(u"/")
+        logout.addClickHandler(_anonymous())
         self.loginInfo.add(logout)

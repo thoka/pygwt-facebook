@@ -48,32 +48,34 @@ class FriendSelector(Composite):
         """
         self.outer.setSpacing(10)
         self.outer.add(self.loader)
-        self.apiClient.friendsGetExtended(class anonymous(AsyncCallback)():
-                                              
-                                              @java.typed(Throwable)
-                                              def onFailure(self, caught):
-                                                  fe = caught
-                                                  ui = ErrorResponseUI(fe.getErrorMessage())
-                                                  ui.center()
-                                                  ui.show()
-                                              
-                                              @java.typed(List)
-                                              def onSuccess(self, result):
-                                                  self.outer.remove(self.loader)
-                                                  dropBox = ListBox(False)
-                                                  dropBox.getElement().setId(u"dropBox")
-                                                  for user in result:
-                                                      dropBox.addItem(user.getName(), user.getUidString())
-                                                  self.outer.clear()
-                                                  self.outer.add(HTML(u"Choose Friend"))
-                                                  self.outer.add(dropBox)
-                                                  b = Button(u"Go")
-                                                  self.outer.add(b)
-                                                  b.addClickHandler(class anonymous(ClickHandler)():
-                                                                        
-                                                                        @java.typed(ClickEvent)
-                                                                        def onClick(self, event):
-                                                                            self.friendSelection.onSelected(Long(dropBox.getValue(dropBox.getSelectedIndex())))))
+        class _anonymous(AsyncCallback):
+            
+            @java.typed(Throwable)
+            def onFailure(self, caught):
+                fe = caught
+                ui = ErrorResponseUI(fe.getErrorMessage())
+                ui.center()
+                ui.show()
+            
+            @java.typed(List)
+            def onSuccess(self, result):
+                self.outer.remove(self.loader)
+                dropBox = ListBox(False)
+                dropBox.getElement().setId(u"dropBox")
+                for user in result:
+                    dropBox.addItem(user.getName(), user.getUidString())
+                self.outer.clear()
+                self.outer.add(HTML(u"Choose Friend"))
+                self.outer.add(dropBox)
+                b = Button(u"Go")
+                self.outer.add(b)
+                class _anonymous(ClickHandler):
+                    
+                    @java.typed(ClickEvent)
+                    def onClick(self, event):
+                        self.friendSelection.onSelected(Long(dropBox.getValue(dropBox.getSelectedIndex())))
+                b.addClickHandler(_anonymous())
+        self.apiClient.friendsGetExtended(_anonymous())
         self.initWidget(self.outer)
     
     @java.typed(FriendSelectionHandler)

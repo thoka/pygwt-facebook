@@ -200,7 +200,7 @@ class FacebookConnect(Object):
         Show permission dialog to user. You might want to use FbPromptPermission
         instead {@link FbPromptPermission}
         """
-        permissionCallback = class anonymous(AsyncCallback)():
+        permissionCallback = class _anonymous(AsyncCallback):
                                  
                                  @java.typed(Throwable)
                                  def onFailure(self, t):
@@ -244,7 +244,7 @@ class FacebookConnect(Object):
         
         @see http://wiki.developers.facebook.com/index.php/JS_API_M_FB.Connect.RequireSession
         """
-        nativeCallback = class anonymous(AsyncCallback)():
+        nativeCallback = class _anonymous(AsyncCallback):
                              
                              @java.typed(Throwable)
                              def onFailure(self, t):
@@ -267,7 +267,7 @@ class FacebookConnect(Object):
         
         @see http://wiki.developers.facebook.com/index.php/JS_API_M_FB.Connect.RequireSession
         """
-        nativeCallback = class anonymous(AsyncCallback)():
+        nativeCallback = class _anonymous(AsyncCallback):
                              
                              @java.typed(Throwable)
                              def onFailure(self, t):

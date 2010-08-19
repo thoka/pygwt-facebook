@@ -41,18 +41,19 @@ class Xfbml(Object):
         """
         Start parse the DOM tree to search for XFBML tags and render them. This will be invoked automatically unless FB.XFBML.Host.autoParseDomTree is set to false.
         """
-        DeferredCommand.addCommand(class anonymous(Command)():
-                                       
-                                       def execute(self):
-                                           if element is not None and element.getId() is not None:
-                                               if u"".equals(element.getId()):
-                                                   self.parseDomTree()
-                                               else:
-                                                   GWT.log(u"ParseDomElement: " + java.str(element.getId()), None)
-                                                   self.parseDomElement(element.getId())
-                                                   GWT.log(java.str(Xfbml.__class__) + u"Done ", None)
-                                           else:
-                                               self.parseDomTree())
+        class _anonymous(Command):
+            
+            def execute(self):
+                if element is not None and element.getId() is not None:
+                    if u"".equals(element.getId()):
+                        self.parseDomTree()
+                    else:
+                        GWT.log(u"ParseDomElement: " + java.str(element.getId()), None)
+                        self.parseDomElement(element.getId())
+                        GWT.log(java.str(Xfbml.__class__) + u"Done ", None)
+                else:
+                    self.parseDomTree()
+        DeferredCommand.addCommand(_anonymous())
     
     @java.private
     @java.static

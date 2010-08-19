@@ -27,23 +27,25 @@ class Notes_get(Showcase):
         friendSelector = FriendSelector()
         outer.add(friendSelector)
         outer.add(notesHolder)
-        friendSelector.addFriendSelectionHandler(class anonymous(FriendSelectionHandler)():
-                                                     
-                                                     @java.typed(Long)
-                                                     def onSelected(self, uid):
-                                                         notesHolder.clear()
-                                                         self.addLoader(notesHolder)
-                                                         self.apiClient.notesGet(uid, class anonymous(AsyncCallback)():
-                                                                                          
-                                                                                          @java.typed(Throwable)
-                                                                                          def onFailure(self, caught):
-                                                                                              self.handleFailure(caught)
-                                                                                          
-                                                                                          @java.typed(List)
-                                                                                          def onSuccess(self, result):
-                                                                                              self.removeLoader(notesHolder)
-                                                                                              if result.size() == 0:
-                                                                                                  notesHolder.add(HTML(u"User has not created any notes "))
-                                                                                              for n in result:
-                                                                                                  notesHolder.add(HTML(u"Note Title : " + java.str(n.getTitle()))))) #  Let user select a friend and show notes
+        class _anonymous(FriendSelectionHandler):
+            
+            @java.typed(Long)
+            def onSelected(self, uid):
+                notesHolder.clear()
+                self.addLoader(notesHolder)
+                class _anonymous(AsyncCallback):
+                    
+                    @java.typed(Throwable)
+                    def onFailure(self, caught):
+                        self.handleFailure(caught)
+                    
+                    @java.typed(List)
+                    def onSuccess(self, result):
+                        self.removeLoader(notesHolder)
+                        if result.size() == 0:
+                            notesHolder.add(HTML(u"User has not created any notes "))
+                        for n in result:
+                            notesHolder.add(HTML(u"Note Title : " + java.str(n.getTitle())))
+                self.apiClient.notesGet(uid, _anonymous())
+        friendSelector.addFriendSelectionHandler(_anonymous()) #  Let user select a friend and show notes
         self.initWidget(outer)

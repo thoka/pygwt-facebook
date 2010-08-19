@@ -27,19 +27,20 @@ class Data_getCookies(Showcase):
         self.__init__._super()
         outer = VerticalPanel()
         self.addLoader(outer)
-        self.apiClient.dataGetCookies(None, class anonymous(AsyncCallback)():
-                                                
-                                                @java.typed(Throwable)
-                                                def onFailure(self, caught):
-                                                    self.handleFailure(caught)
-                                                
-                                                @java.typed(List)
-                                                def onSuccess(self, result):
-                                                    self.removeLoader(outer)
-                                                    outer.add(HTML(u"<h3> Number of Cookies: " + java.str(result.size())))
-                                                    if result.size() == 0:
-                                                        outer.add(HTML(u"Set cookies by testing method data.setCookie"))
-                                                    for c in result:
-                                                        h = java.str(java.str(java.str(u"Name: " + java.str(c.getName())) + u", Value: " + c.getValue()) + u", Expires: " + c.getExpires()) + u", Path: " + c.getPath()
-                                                        outer.add(HTML(h)))
+        class _anonymous(AsyncCallback):
+            
+            @java.typed(Throwable)
+            def onFailure(self, caught):
+                self.handleFailure(caught)
+            
+            @java.typed(List)
+            def onSuccess(self, result):
+                self.removeLoader(outer)
+                outer.add(HTML(u"<h3> Number of Cookies: " + java.str(result.size())))
+                if result.size() == 0:
+                    outer.add(HTML(u"Set cookies by testing method data.setCookie"))
+                for c in result:
+                    h = java.str(java.str(java.str(u"Name: " + java.str(c.getName())) + u", Value: " + c.getValue()) + u", Expires: " + c.getExpires()) + u", Path: " + c.getPath()
+                    outer.add(HTML(h))
+        self.apiClient.dataGetCookies(None, _anonymous())
         self.initWidget(outer)

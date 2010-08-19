@@ -114,23 +114,25 @@ class Notes_create(Showcase):
         p.add(self.createInput(u"Title", title))
         p.add(self.createInput(u"Content", content))
         p.add(saveButton)
-        saveButton.addClickHandler(class anonymous(ClickHandler)():
-                                       
-                                       @java.typed(ClickEvent)
-                                       def onClick(self, event):
-                                           note = Note.createNote(title.getValue(), content.getValue())
-                                           self.apiClient.notesCreate(note, class anonymous(AsyncCallback)():
-                                                                                
-                                                                                @java.typed(Throwable)
-                                                                                def onFailure(self, caught):
-                                                                                    Notes_create.self###NOTIMPL QThis###.handleFailure(caught)
-                                                                                
-                                                                                @java.typed(Long)
-                                                                                def onSuccess(self, noteId):
-                                                                                    p.add(HTML(u"Added note with id " + java.str(noteId)))
-                                                                                    deleteNoteLink = Anchor(u"Delete")
-                                                                                    deleteNoteLink.addClickHandler(self.DeleteNoteClickHandler(noteId))
-                                                                                    p.add(deleteNoteLink))) #  User clicks save, store it to facebook
+        class _anonymous(ClickHandler):
+            
+            @java.typed(ClickEvent)
+            def onClick(self, event):
+                note = Note.createNote(title.getValue(), content.getValue())
+                class _anonymous(AsyncCallback):
+                    
+                    @java.typed(Throwable)
+                    def onFailure(self, caught):
+                        Notes_create.self###NOTIMPL QThis###.handleFailure(caught)
+                    
+                    @java.typed(Long)
+                    def onSuccess(self, noteId):
+                        p.add(HTML(u"Added note with id " + java.str(noteId)))
+                        deleteNoteLink = Anchor(u"Delete")
+                        deleteNoteLink.addClickHandler(self.DeleteNoteClickHandler(noteId))
+                        p.add(deleteNoteLink)
+                self.apiClient.notesCreate(note, _anonymous())
+        saveButton.addClickHandler(_anonymous()) #  User clicks save, store it to facebook
         return p
     
     @java.private

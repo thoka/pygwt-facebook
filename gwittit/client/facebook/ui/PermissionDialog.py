@@ -62,20 +62,22 @@ class PermissionDialog(Composite):
         else:
             a.setHTML(java.str(u"<h3>Grant  " + java.str(permission)) + u" permission</h3>")
         a.addStyleName(u"clickable")
-        a.addClickHandler(class anonymous(ClickHandler)():
-                              
-                              @java.typed(ClickEvent)
-                              def onClick(self, event):
-                                  FacebookConnect.showPermissionDialog(permission, class anonymous(AsyncCallback)():
-                                                                                       
-                                                                                       @java.typed(Throwable)
-                                                                                       def onFailure(self, caught):
-                                                                                           ErrorResponseUI(caught).center()
-                                                                                       
-                                                                                       @java.typed(Boolean)
-                                                                                       def onSuccess(self, result):
-                                                                                           if self.handler is not None:
-                                                                                               self.handler.onPermissionChange(result)))
+        class _anonymous(ClickHandler):
+            
+            @java.typed(ClickEvent)
+            def onClick(self, event):
+                class _anonymous(AsyncCallback):
+                    
+                    @java.typed(Throwable)
+                    def onFailure(self, caught):
+                        ErrorResponseUI(caught).center()
+                    
+                    @java.typed(Boolean)
+                    def onSuccess(self, result):
+                        if self.handler is not None:
+                            self.handler.onPermissionChange(result)
+                FacebookConnect.showPermissionDialog(permission, _anonymous())
+        a.addClickHandler(_anonymous())
         return a
     
     @java.typed(Permission)
@@ -83,19 +85,20 @@ class PermissionDialog(Composite):
         self.outer.clear()
         self.loader.setHTML(java.str(u"Checking " + java.str(permission)) + u" permission ")
         self.outer.add(self.loader)
-        self.apiClient.usersHasAppPermission(permission, class anonymous(AsyncCallback)():
-                                                             
-                                                             @java.typed(Throwable)
-                                                             def onFailure(self, caught):
-                                                                 ErrorResponseUI(caught).center()
-                                                             
-                                                             @java.typed(Boolean)
-                                                             def onSuccess(self, hasPermission):
-                                                                 self.outer.remove(self.loader)
-                                                                 if hasPermission:
-                                                                     self.handler.onPermissionChange(True)
-                                                                 else:
-                                                                     self.outer.add(self.createShowPermissionUI(permission))) #  Check if user has the right permission. If not show permission dialog
+        class _anonymous(AsyncCallback):
+            
+            @java.typed(Throwable)
+            def onFailure(self, caught):
+                ErrorResponseUI(caught).center()
+            
+            @java.typed(Boolean)
+            def onSuccess(self, hasPermission):
+                self.outer.remove(self.loader)
+                if hasPermission:
+                    self.handler.onPermissionChange(True)
+                else:
+                    self.outer.add(self.createShowPermissionUI(permission))
+        self.apiClient.usersHasAppPermission(permission, _anonymous()) #  Check if user has the right permission. If not show permission dialog
     
     @java.typed(PermissionHandler)
     def addPermissionHandler(self, handler):

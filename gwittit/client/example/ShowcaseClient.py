@@ -182,15 +182,16 @@ class ShowcaseClient(Composite):
             self.createShowcasePanel(example)
         else:
             pd = PermissionDialog(example.getMessage())
-            pd.addPermissionHandler(class anonymous(PermissionHandler)():
-                                        
-                                        @java.typed(Boolean)
-                                        def onPermissionChange(self, granted):
-                                            if granted:
-                                                example.permissionGranted()
-                                                self.createShowcasePanel(example)
-                                            else:
-                                                self.showcaseWrapper.add(HTML(java.str(u"Need " + java.str(example.getNeedPermission())) + u" to show this demo, hit reload")))
+            class _anonymous(PermissionHandler):
+                
+                @java.typed(Boolean)
+                def onPermissionChange(self, granted):
+                    if granted:
+                        example.permissionGranted()
+                        self.createShowcasePanel(example)
+                    else:
+                        self.showcaseWrapper.add(HTML(java.str(u"Need " + java.str(example.getNeedPermission())) + u" to show this demo, hit reload"))
+            pd.addPermissionHandler(_anonymous())
             pd.checkPermission(example.getNeedPermission())
             self.showcaseWrapper.add(pd)
     #  Create showcase with source link on top.

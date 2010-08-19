@@ -33,25 +33,27 @@ class Friends_getMutualFriends(Showcase):
         mutualFriends = VerticalPanel()
         mutualFriends.getElement().setId(u"Friends_getMutualFriends-mutualFriends")
         fs = FriendSelector() #  Let the user pick a friends
-        fs.addFriendSelectionHandler(class anonymous(FriendSelectionHandler)():
-                                         #  Check if current logged in user has common friends with selected.
-                                         
-                                         @java.typed(Long)
-                                         def onSelected(self, targetUid):
-                                             mutualFriends.clear()
-                                             self.addLoader(mutualFriends)
-                                             self.apiClient.friendsGetMutualFriends(targetUid, class anonymous(AsyncCallback)():
-                                                                                                   
-                                                                                                   @java.typed(Throwable)
-                                                                                                   def onFailure(self, caught):
-                                                                                                       self.handleFailure(caught)
-                                                                                                   
-                                                                                                   @java.typed(List)
-                                                                                                   def onSuccess(self, result):
-                                                                                                       self.removeLoader(mutualFriends)
-                                                                                                       mutualFriends.add(HTML(java.str(u"Number of mutual friends " + java.str(result.size())) + u" with " + FbName(targetUid)))
-                                                                                                       p = ProfilePicsPanel(result)
-                                                                                                       mutualFriends.add(p)) #  Call facebook)
+        class _anonymous(FriendSelectionHandler):
+            #  Check if current logged in user has common friends with selected.
+            
+            @java.typed(Long)
+            def onSelected(self, targetUid):
+                mutualFriends.clear()
+                self.addLoader(mutualFriends)
+                class _anonymous(AsyncCallback):
+                    
+                    @java.typed(Throwable)
+                    def onFailure(self, caught):
+                        self.handleFailure(caught)
+                    
+                    @java.typed(List)
+                    def onSuccess(self, result):
+                        self.removeLoader(mutualFriends)
+                        mutualFriends.add(HTML(java.str(u"Number of mutual friends " + java.str(result.size())) + u" with " + FbName(targetUid)))
+                        p = ProfilePicsPanel(result)
+                        mutualFriends.add(p)
+                self.apiClient.friendsGetMutualFriends(targetUid, _anonymous()) #  Call facebook
+        fs.addFriendSelectionHandler(_anonymous())
         outer.add(fs)
         outer.add(mutualFriends)
         self.initWidget(outer)

@@ -42,11 +42,12 @@ class Photos_get(Showcase):
         self.paramsResultWrapper.add(self.paramsWrapper)
         self.paramsResultWrapper.add(self.resultWrapper)
         fs = FriendSelector()
-        fs.addFriendSelectionHandler(class anonymous(FriendSelectionHandler)():
-                                         
-                                         @java.typed(Long)
-                                         def onSelected(self, uid):
-                                             self.displayPhotos(uid))
+        class _anonymous(FriendSelectionHandler):
+            
+            @java.typed(Long)
+            def onSelected(self, uid):
+                self.displayPhotos(uid)
+        fs.addFriendSelectionHandler(_anonymous())
         self.paramsWrapper.add(fs)
         self.initWidget(self.paramsResultWrapper)
     #  * Display photos of selected user
@@ -55,19 +56,20 @@ class Photos_get(Showcase):
     @java.typed(Long)
     def displayPhotos(self, subjId):
         self.resultWrapper.add(self.getLoader())
-        self.apiClient.photosGet(subjId, class anonymous(AsyncCallback)():
-                                             
-                                             @java.typed(Throwable)
-                                             def onFailure(self, caught):
-                                                 self.handleFailure(caught)
-                                             
-                                             @java.typed(List)
-                                             def onSuccess(self, result):
-                                                 photosPanel = FlowPanel()
-                                                 photosPanel.getElement().setId(u"photosPanel")
-                                                 self.resultWrapper.clear()
-                                                 self.resultWrapper.add(HTML(java.str(u"<h4>Photos size: " + java.str(result.size())) + u"</h4>"))
-                                                 for p in result:
-                                                     photosPanel.add(FbPhoto(p.getPid(), Size.thumb))
-                                                 self.resultWrapper.add(photosPanel)
-                                                 Xfbml.parse(photosPanel.getElement())) #  Get photos from facebook
+        class _anonymous(AsyncCallback):
+            
+            @java.typed(Throwable)
+            def onFailure(self, caught):
+                self.handleFailure(caught)
+            
+            @java.typed(List)
+            def onSuccess(self, result):
+                photosPanel = FlowPanel()
+                photosPanel.getElement().setId(u"photosPanel")
+                self.resultWrapper.clear()
+                self.resultWrapper.add(HTML(java.str(u"<h4>Photos size: " + java.str(result.size())) + u"</h4>"))
+                for p in result:
+                    photosPanel.add(FbPhoto(p.getPid(), Size.thumb))
+                self.resultWrapper.add(photosPanel)
+                Xfbml.parse(photosPanel.getElement())
+        self.apiClient.photosGet(subjId, _anonymous()) #  Get photos from facebook

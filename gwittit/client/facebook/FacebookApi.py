@@ -208,11 +208,12 @@ class FacebookApi(Object):
         Comments.get</a>
         """
         fql = java.str(u"select xid, text,fromid,time,id,username,reply_xid from comment where xid ='" + java.str(xid)) + u"'" #  Facebook Bug
-        self.fqlQuery(fql, class anonymous(Callback)(callback):
-                               
-                               @java.typed(JavaScriptObject)
-                               def onSuccess(self, result):
-                                   callback.onSuccess(self.cast(Comment.__class__, result))) #  Call Facebook Method
+        class _anonymous(Callback):
+            
+            @java.typed(JavaScriptObject)
+            def onSuccess(self, result):
+                callback.onSuccess(self.cast(Comment.__class__, result))
+        self.fqlQuery(fql, _anonymous(callback)) #  Call Facebook Method
     
     @java.typed(String, String, AsyncCallback)
     def commentsRemove(self, xid, commentId, callback):
@@ -678,7 +679,7 @@ class FacebookApi(Object):
     @java.private
     @java.typed(String, JavaScriptObject, AsyncCallback)
     def friendsGetGeneric(self, method, params, callback):
-        ac = class anonymous(AsyncCallback)():
+        ac = class _anonymous(AsyncCallback):
                  
                  @java.typed(Throwable)
                  def onFailure(self, caught):
@@ -891,7 +892,7 @@ class FacebookApi(Object):
         """
         p = self.getDefaultParams()
         types = NotificationRequest.NotificationType.values()
-        internCallback = class anonymous(AsyncCallback)():
+        internCallback = class _anonymous(AsyncCallback):
                              
                              @java.typed(Throwable)
                              def onFailure(self, caught):
@@ -927,7 +928,7 @@ class FacebookApi(Object):
         are not included.
         """
         j = Json().put(u"start_time", startTime).put(u"include_read", includeRead)
-        internCallback = class anonymous(AsyncCallback)():
+        internCallback = class _anonymous(AsyncCallback):
                              
                              @java.typed(Throwable)
                              def onFailure(self, caught):
@@ -1072,7 +1073,7 @@ class FacebookApi(Object):
         j.put(u"subject", subject)
         j.put(u"text", text)
         j.put(u"fbml", fbml)
-        internCallback = class anonymous(AsyncCallback)():
+        internCallback = class _anonymous(AsyncCallback):
                              
                              @java.typed(Throwable)
                              def onFailure(self, caught):
@@ -1379,7 +1380,7 @@ class FacebookApi(Object):
         """
         GWT.log(u"users_hasAppPermission: " + java.str(permission), None)
         j = Json().put(u"ext_perm", java.str(permission))
-        nativeCallback = class anonymous(Callback)(callback):
+        nativeCallback = class _anonymous(Callback):
                              
                              @java.typed(JavaScriptObject)
                              def onSuccess(self, jso):
@@ -1945,63 +1946,68 @@ class FacebookApi(Object):
     @java.private
     @java.typed(String, JavaScriptObject, AsyncCallback)
     def callMethodRetInteger(self, method, params, callback):
-        self.callMethod(method, params, class anonymous(Callback)(callback):
-                                            
-                                            @java.typed(JavaScriptObject)
-                                            def onSuccess(self, jso):
-                                                callback.onSuccess(Integer(java.str(jso))))
+        class _anonymous(Callback):
+            
+            @java.typed(JavaScriptObject)
+            def onSuccess(self, jso):
+                callback.onSuccess(Integer(java.str(jso)))
+        self.callMethod(method, params, _anonymous(callback))
     #  Call method and parse response to Integer
     
     @java.private
     @java.typed(String, JavaScriptObject, AsyncCallback)
     def callMethodRetLong(self, method, params, callback):
-        self.callMethod(method, params, class anonymous(Callback)(callback):
-                                            
-                                            @java.typed(JavaScriptObject)
-                                            def onSuccess(self, jso):
-                                                callback.onSuccess(Long(java.str(jso))))
+        class _anonymous(Callback):
+            
+            @java.typed(JavaScriptObject)
+            def onSuccess(self, jso):
+                callback.onSuccess(Long(java.str(jso)))
+        self.callMethod(method, params, _anonymous(callback))
     #  Call method and cast javascriptobject to a extending javascriptobject.
     
     @java.private
     @java.typed(String, JavaScriptObject, Class, AsyncCallback)
     T #TypeBound extends JavaScriptObject
     def callMethodRetObject(self, method, params, entity, callback):
-        self.callMethod(method, params, class anonymous(Callback)(callback):
-                                            
-                                            @java.typed(JavaScriptObject)
-                                            def onSuccess(self, jso):
-                                                entity = jso.cast()
-                                                callback.onSuccess(entity))
+        class _anonymous(Callback):
+            
+            @java.typed(JavaScriptObject)
+            def onSuccess(self, jso):
+                entity = jso.cast()
+                callback.onSuccess(entity)
+        self.callMethod(method, params, _anonymous(callback))
     #  Method for calling method wich returns a boolean in the form "1" or "0",
     #  or "true" or "false"
     
     @java.private
     @java.typed(String, JavaScriptObject, AsyncCallback)
     def callMethodRetBoolean(self, method, params, callback):
-        self.callMethod(method, params, class anonymous(Callback)(callback):
-                                            
-                                            @java.typed(JavaScriptObject)
-                                            def onSuccess(self, response):
-                                                #  Hackarond facebook bug, data.setCookie returns an empty
-                                                if java.str(response).equals(u"{}"):
-                                                    callback.onSuccess(True)
-                                                    return
-                                                callback.onSuccess(u"1".equals(java.str(response)) or u"true".equals(java.str(response))))
+        class _anonymous(Callback):
+            
+            @java.typed(JavaScriptObject)
+            def onSuccess(self, response):
+                #  Hackarond facebook bug, data.setCookie returns an empty
+                if java.str(response).equals(u"{}"):
+                    callback.onSuccess(True)
+                    return
+                callback.onSuccess(u"1".equals(java.str(response)) or u"true".equals(java.str(response)))
+        self.callMethod(method, params, _anonymous(callback))
     #  Convenient method and cast response to a list
     
     @java.typed(String, JavaScriptObject, Class, AsyncCallback)
     def callMethodRetList(self, method, params, entity, callback):
-        self.callMethod(method, params, class anonymous(Callback)(callback):
-                                            
-                                            @java.typed(JavaScriptObject)
-                                            def onSuccess(self, jso):
-                                                try:
-                                                    if u"{}".equals(JSONObject(jso).toString().trim()):
-                                                        callback.onSuccess(ArrayList())
-                                                    else:
-                                                        callback.onSuccess(self.cast(entity, jso))
-                                                except Exception,e:
-                                                    pass)
+        class _anonymous(Callback):
+            
+            @java.typed(JavaScriptObject)
+            def onSuccess(self, jso):
+                try:
+                    if u"{}".equals(JSONObject(jso).toString().trim()):
+                        callback.onSuccess(ArrayList())
+                    else:
+                        callback.onSuccess(self.cast(entity, jso))
+                except Exception,e:
+                    pass
+        self.callMethod(method, params, _anonymous(callback))
     #  Convenient method for casting a javascriptobject to a list.
     
     @java.private

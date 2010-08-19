@@ -63,11 +63,12 @@ class EventEditor(Composite):
         self.outer.add(self.createLabelAndInput(u"Location", self.locationText))
         self.outer.add(self.createLabelAndInput(u"City", self.cityText))
         self.outer.add(self.createEventButton)
-        self.createEventButton.addClickHandler(class anonymous(ClickHandler)():
-                                                   
-                                                   @java.typed(ClickEvent)
-                                                   def onClick(self, event):
-                                                       self.saveOrUpdate())
+        class _anonymous(ClickHandler):
+            
+            @java.typed(ClickEvent)
+            def onClick(self, event):
+                self.saveOrUpdate()
+        self.createEventButton.addClickHandler(_anonymous())
         self.initWidget(self.outer)
     
     @java.private
@@ -88,19 +89,20 @@ class EventEditor(Composite):
         jEvent.put(u"end_time", Date().getTime() + Long(u"9999999999999"))
         eventInfo = EventInfo.fromJson(java.str(jEvent))
         self.outer.add(self.loader)
-        self.apiClient.eventsCreate(eventInfo, class anonymous(AsyncCallback)():
-                                                   
-                                                   @java.typed(Throwable)
-                                                   def onFailure(self, caught):
-                                                       self.outer.remove(self.loader)
-                                                       errorResponse = ErrorResponseUI(caught)
-                                                       errorResponse.center()
-                                                       errorResponse.show()
-                                                   
-                                                   @java.typed(JavaScriptObject)
-                                                   def onSuccess(self, result):
-                                                       self.outer.remove(self.loader)
-                                                       self.outer.add(HTML(u"Created event with ID " + java.str(result)))) #  Create the event.
+        class _anonymous(AsyncCallback):
+            
+            @java.typed(Throwable)
+            def onFailure(self, caught):
+                self.outer.remove(self.loader)
+                errorResponse = ErrorResponseUI(caught)
+                errorResponse.center()
+                errorResponse.show()
+            
+            @java.typed(JavaScriptObject)
+            def onSuccess(self, result):
+                self.outer.remove(self.loader)
+                self.outer.add(HTML(u"Created event with ID " + java.str(result)))
+        self.apiClient.eventsCreate(eventInfo, _anonymous()) #  Create the event.
     
     @java.private
     def initFields(self):

@@ -28,14 +28,15 @@ class Friends_getAppUsers(Showcase):
         outer = VerticalPanel()
         outer.getElement().setId(u"Friends_getAppUsers")
         self.addLoader(outer)
-        self.apiClient.friendsGetAppUsers(class anonymous(AsyncCallback)():
-                                              
-                                              @java.typed(Throwable)
-                                              def onFailure(self, caught):
-                                                  self.handleFailure(caught)
-                                              
-                                              @java.typed(List)
-                                              def onSuccess(self, result):
-                                                  self.removeLoader(outer)
-                                                  outer.add(ProfilePicsPanel(result)))
+        class _anonymous(AsyncCallback):
+            
+            @java.typed(Throwable)
+            def onFailure(self, caught):
+                self.handleFailure(caught)
+            
+            @java.typed(List)
+            def onSuccess(self, result):
+                self.removeLoader(outer)
+                outer.add(ProfilePicsPanel(result))
+        self.apiClient.friendsGetAppUsers(_anonymous())
         self.initWidget(outer)

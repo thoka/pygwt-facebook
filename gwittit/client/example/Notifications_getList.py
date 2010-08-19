@@ -32,33 +32,35 @@ class Notifications_getList(Showcase):
         self.__init__._super()
         outer = VerticalPanel()
         self.addLoader(outer)
-        self.apiClient.notificationsGetList(None, None, class anonymous(AsyncCallback)():
-                                                            
-                                                            @java.typed(Throwable)
-                                                            def onFailure(self, caught):
-                                                                self.handleFailure(caught)
-                                                            
-                                                            @java.typed(List)
-                                                            def onSuccess(self, result):
-                                                                self.removeLoader(outer)
-                                                                outer.add(HTML(u"Result Size " + java.str(result.size())))
-                                                                for no in result:
-                                                                    tmp = VerticalPanel()
-                                                                    tmp.addStyleName(u"notification")
-                                                                    tmp.add(HTML(java.str(u"<h3>" + java.str(no.getTitleText())) + u"</h3>"))
-                                                                    tmp.add(HTML(no.getBodyHtml()))
-                                                                    tmp.add(HTML(no.getHref()))
-                                                                    if not no.getIsUnread():
-                                                                        tmp.add(HTML(u"Status : Old"))
-                                                                    markRead = Anchor(u"Mark as Read")
-                                                                    markRead.addClickHandler(class anonymous(ClickHandler)():
-                                                                                                 
-                                                                                                 @java.typed(ClickEvent)
-                                                                                                 def onClick(self, event):
-                                                                                                     markRead.setHTML(u"Marked as Read")
-                                                                                                     markRead(no.getNotificationId()))
-                                                                    tmp.add(markRead)
-                                                                    outer.add(tmp)) #  Get facebook data
+        class _anonymous(AsyncCallback):
+            
+            @java.typed(Throwable)
+            def onFailure(self, caught):
+                self.handleFailure(caught)
+            
+            @java.typed(List)
+            def onSuccess(self, result):
+                self.removeLoader(outer)
+                outer.add(HTML(u"Result Size " + java.str(result.size())))
+                for no in result:
+                    tmp = VerticalPanel()
+                    tmp.addStyleName(u"notification")
+                    tmp.add(HTML(java.str(u"<h3>" + java.str(no.getTitleText())) + u"</h3>"))
+                    tmp.add(HTML(no.getBodyHtml()))
+                    tmp.add(HTML(no.getHref()))
+                    if not no.getIsUnread():
+                        tmp.add(HTML(u"Status : Old"))
+                    markRead = Anchor(u"Mark as Read")
+                    class _anonymous(ClickHandler):
+                        
+                        @java.typed(ClickEvent)
+                        def onClick(self, event):
+                            markRead.setHTML(u"Marked as Read")
+                            markRead(no.getNotificationId())
+                    markRead.addClickHandler(_anonymous())
+                    tmp.add(markRead)
+                    outer.add(tmp)
+        self.apiClient.notificationsGetList(None, None, _anonymous()) #  Get facebook data
         self.initWidget(outer)
     
     @java.private
@@ -67,13 +69,14 @@ class Notifications_getList(Showcase):
         """
         * Mark notification as read.
         """
-        self.apiClient.notificationsMarkRead(nid, class anonymous(AsyncCallback)():
-                                                      
-                                                      @java.typed(Throwable)
-                                                      def onFailure(self, caught):
-                                                          self.handleFailure(caught)
-                                                      
-                                                      @java.typed(Boolean)
-                                                      def onSuccess(self, result):
-                                                          if not result:
-                                                              Window.alert(u"Failed to mark notification ")) #  Mark notification as read.
+        class _anonymous(AsyncCallback):
+            
+            @java.typed(Throwable)
+            def onFailure(self, caught):
+                self.handleFailure(caught)
+            
+            @java.typed(Boolean)
+            def onSuccess(self, result):
+                if not result:
+                    Window.alert(u"Failed to mark notification ")
+        self.apiClient.notificationsMarkRead(nid, _anonymous()) #  Mark notification as read.

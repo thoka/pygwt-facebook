@@ -41,41 +41,42 @@ class Notifications_get(Showcase):
         eventInvitesWrapper = VerticalPanel()
         eventInvitesWrapper.getElement().setId(u"eventInvitesWrapper")
         self.addLoader(outer)
-        self.apiClient.notificationsGet(class anonymous(AsyncCallback)():
-                                            
-                                            @java.typed(Throwable)
-                                            def onFailure(self, caught):
-                                                self.handleFailure(caught)
-                                            
-                                            @java.typed(List)
-                                            def onSuccess(self, result):
-                                                self.removeLoader(outer)
-                                                for nc in result:
-                                                    outer.add(HTML(java.str(u"<h3>" + java.str(nc.getType())) + u"</h3>"))
-                                                    if nc.getUnread() is not None:
-                                                        outer.add(HTML(u"Unread: " + java.str(nc.getUnread())))
-                                                    #  Friend requests.
-                                                    if nc.getTypeEnum() == NotificationType.friend_requests and nc.getRequestIds().size() > 0:
-                                                        outer.add(friendRequestWrapper)
-                                                        for uid in nc.getRequestIds():
-                                                            friendRequestWrapper.add(FbProfilePic(uid))
-                                                        Xfbml.parse(friendRequestWrapper)
-                                                    elif nc.getTypeEnum() == NotificationType.friend_requests and nc.getRequestIds().size() > 0:
-                                                        outer.add(friendRequestWrapper)
-                                                        for uid in nc.getRequestIds():
-                                                            friendRequestWrapper.add(FbProfilePic(uid))
-                                                        Xfbml.parse(friendRequestWrapper)
-                                                    elif nc.getTypeEnum() == NotificationType.group_invites:
-                                                        outer.add(groupInvitesWrapper)
-                                                        for gid in nc.getRequestIds():
-                                                            groupInvitesWrapper.add(HTML(u"GroupInvite: " + java.str(gid)))
-                                                            groupInvitesWrapper.add(FbGroupLink(gid))
-                                                        Xfbml.parse(groupInvitesWrapper)
-                                                    else:
-                                                      if nc.getTypeEnum() == NotificationType.event_invites:
-                                                          outer.add(eventInvitesWrapper)
-                                                          if nc.getRequestIds().size() > 0:
-                                                              for eid in nc.getRequestIds():
-                                                                  eventInvitesWrapper.add(FbEventLink(eid))
-                                                          Xfbml.parse(eventInvitesWrapper)) #  Get facebook data
+        class _anonymous(AsyncCallback):
+            
+            @java.typed(Throwable)
+            def onFailure(self, caught):
+                self.handleFailure(caught)
+            
+            @java.typed(List)
+            def onSuccess(self, result):
+                self.removeLoader(outer)
+                for nc in result:
+                    outer.add(HTML(java.str(u"<h3>" + java.str(nc.getType())) + u"</h3>"))
+                    if nc.getUnread() is not None:
+                        outer.add(HTML(u"Unread: " + java.str(nc.getUnread())))
+                    #  Friend requests.
+                    if nc.getTypeEnum() == NotificationType.friend_requests and nc.getRequestIds().size() > 0:
+                        outer.add(friendRequestWrapper)
+                        for uid in nc.getRequestIds():
+                            friendRequestWrapper.add(FbProfilePic(uid))
+                        Xfbml.parse(friendRequestWrapper)
+                    elif nc.getTypeEnum() == NotificationType.friend_requests and nc.getRequestIds().size() > 0:
+                        outer.add(friendRequestWrapper)
+                        for uid in nc.getRequestIds():
+                            friendRequestWrapper.add(FbProfilePic(uid))
+                        Xfbml.parse(friendRequestWrapper)
+                    elif nc.getTypeEnum() == NotificationType.group_invites:
+                        outer.add(groupInvitesWrapper)
+                        for gid in nc.getRequestIds():
+                            groupInvitesWrapper.add(HTML(u"GroupInvite: " + java.str(gid)))
+                            groupInvitesWrapper.add(FbGroupLink(gid))
+                        Xfbml.parse(groupInvitesWrapper)
+                    else:
+                      if nc.getTypeEnum() == NotificationType.event_invites:
+                          outer.add(eventInvitesWrapper)
+                          if nc.getRequestIds().size() > 0:
+                              for eid in nc.getRequestIds():
+                                  eventInvitesWrapper.add(FbEventLink(eid))
+                          Xfbml.parse(eventInvitesWrapper)
+        self.apiClient.notificationsGet(_anonymous()) #  Get facebook data
         self.initWidget(outer)

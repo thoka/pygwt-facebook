@@ -41,18 +41,19 @@ class Friends_areFriends(Showcase):
         uids2.add(Long(709281400))
         uids2.add(Long(560635378))
         uids2.add(Long(709281400))
-        self.apiClient.friendsAreFriends(uids1, uids2, class anonymous(AsyncCallback)():
-                                                           
-                                                           @java.typed(Throwable)
-                                                           def onFailure(self, caught):
-                                                               self.handleFailure(caught)
-                                                           
-                                                           @java.typed(List)
-                                                           def onSuccess(self, friendInfoList):
-                                                               outer.clear()
-                                                               result.add(HTML(u"Size " + java.str(friendInfoList.size())))
-                                                               for fi in friendInfoList:
-                                                                   result.add(HTML(java.str(java.str(FbName(fi.getUid1())) + u" friend with " + FbName(fi.getUid2())) + u" ? " + fi.getAreFriends()))
-                                                               outer.add(result)
-                                                               Xfbml.parse(result.getElement()))
+        class _anonymous(AsyncCallback):
+            
+            @java.typed(Throwable)
+            def onFailure(self, caught):
+                self.handleFailure(caught)
+            
+            @java.typed(List)
+            def onSuccess(self, friendInfoList):
+                outer.clear()
+                result.add(HTML(u"Size " + java.str(friendInfoList.size())))
+                for fi in friendInfoList:
+                    result.add(HTML(java.str(java.str(FbName(fi.getUid1())) + u" friend with " + FbName(fi.getUid2())) + u" ? " + fi.getAreFriends()))
+                outer.add(result)
+                Xfbml.parse(result.getElement())
+        self.apiClient.friendsAreFriends(uids1, uids2, _anonymous())
         self.initWidget(outer)

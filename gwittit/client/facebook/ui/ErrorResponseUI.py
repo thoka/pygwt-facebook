@@ -79,10 +79,11 @@ class ErrorResponseUI(DecoratedPopupPanel):
                 self.requestArgsPanel.add(HTML(java.str(u"<li> " + java.str(requestArgs.get(i).getKey())) + u": " + requestArgs.get(i).getValue()))
             self.requestArgsPanel.add(HTML(u"</ul>"))
             self.outer.add(self.requestArgsPanel)
-        self.closeButton.addClickHandler(class anonymous(ClickHandler)():
-                                             
-                                             @java.typed(ClickEvent)
-                                             def onClick(self, event):
-                                                 ErrorResponseUI.self###NOTIMPL QThis###.hide()) #  Close Button
+        class _anonymous(ClickHandler):
+            
+            @java.typed(ClickEvent)
+            def onClick(self, event):
+                ErrorResponseUI.self###NOTIMPL QThis###.hide()
+        self.closeButton.addClickHandler(_anonymous()) #  Close Button
         self.outer.add(self.closeButton)
         self.setWidget(self.outer)

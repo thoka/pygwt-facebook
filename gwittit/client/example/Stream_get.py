@@ -86,38 +86,42 @@ class Stream_get(Showcase):
         menu.add(postsLink)
         menu.add(albumsLink)
         menu.add(profilesLink)
-        postsLink.addClickHandler(class anonymous(ClickHandler)():
-                                      
-                                      @java.typed(ClickEvent)
-                                      def onClick(self, event):
-                                          self.renderPosts(streamBody, self.stream.getPosts())
-                                          Xfbml.parse(streamBody)) #  Click posts link
-        profilesLink.addClickHandler(class anonymous(ClickHandler)():
-                                         
-                                         @java.typed(ClickEvent)
-                                         def onClick(self, event):
-                                             streamBody.clear()
-                                             self.renderProfiles(streamBody, self.stream.getProfiles())) #  Click profiles link
-        albumsLink.addClickHandler(class anonymous(ClickHandler)():
-                                       
-                                       @java.typed(ClickEvent)
-                                       def onClick(self, event):
-                                           self.renderAlbums(streamBody, self.stream.getAlbums())) #  Click album links
+        class _anonymous(ClickHandler):
+            
+            @java.typed(ClickEvent)
+            def onClick(self, event):
+                self.renderPosts(streamBody, self.stream.getPosts())
+                Xfbml.parse(streamBody)
+        postsLink.addClickHandler(_anonymous()) #  Click posts link
+        class _anonymous(ClickHandler):
+            
+            @java.typed(ClickEvent)
+            def onClick(self, event):
+                streamBody.clear()
+                self.renderProfiles(streamBody, self.stream.getProfiles())
+        profilesLink.addClickHandler(_anonymous()) #  Click profiles link
+        class _anonymous(ClickHandler):
+            
+            @java.typed(ClickEvent)
+            def onClick(self, event):
+                self.renderAlbums(streamBody, self.stream.getAlbums())
+        albumsLink.addClickHandler(_anonymous()) #  Click album links
         addContentToPnl.add(streamBody)
         self.addLoader(streamBody) #  Start loading
-        self.apiClient.streamGet(class anonymous(AsyncCallback)():
-                                     
-                                     @java.typed(Throwable)
-                                     def onFailure(self, caught):
-                                         self.handleFailure(caught)
-                                     
-                                     @java.typed(Stream)
-                                     def onSuccess(self, result):
-                                         self.stream = result
-                                         addContentToPnl.insert(menu, 0)
-                                         self.removeLoader(streamBody)
-                                         self.renderPosts(streamBody, result.getPosts())
-                                         Xfbml.parse(streamBody)) #  Get stream from facebook.
+        class _anonymous(AsyncCallback):
+            
+            @java.typed(Throwable)
+            def onFailure(self, caught):
+                self.handleFailure(caught)
+            
+            @java.typed(Stream)
+            def onSuccess(self, result):
+                self.stream = result
+                addContentToPnl.insert(menu, 0)
+                self.removeLoader(streamBody)
+                self.renderPosts(streamBody, result.getPosts())
+                Xfbml.parse(streamBody)
+        self.apiClient.streamGet(_anonymous()) #  Get stream from facebook.
     
     @java.typed(VerticalPanel, JsArray)
     def renderAlbums(self, addContentToPnl, albums):

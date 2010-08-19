@@ -59,11 +59,12 @@ class ProfilePicsPopup(DecoratedPopupPanel):
         self.scrollPanel.add(self.outer)
         super(self.__class__,self).setWidget(self.scrollPanel)
         Xfbml.parse(self.outer)
-        self.moreButton.addClickHandler(class anonymous(ClickHandler)():
-                                            
-                                            @java.typed(ClickEvent)
-                                            def onClick(self, event):
-                                                self.displayUsers(self.picsHolder, self.page+= 1)) #  Add Clickhandler that enables user to browse list
+        class _anonymous(ClickHandler):
+            
+            @java.typed(ClickEvent)
+            def onClick(self, event):
+                self.displayUsers(self.picsHolder, self.page+= 1)
+        self.moreButton.addClickHandler(_anonymous()) #  Add Clickhandler that enables user to browse list
     
     @java.private
     @java.typed(VerticalPanel, int)

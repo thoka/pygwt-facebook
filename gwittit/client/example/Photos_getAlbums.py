@@ -33,20 +33,21 @@ class Photos_getAlbums(Showcase):
         outer = VerticalPanel()
         outer.add(self.getLoader())
         outer.getElement().setId(u"ShowPhotosGetAlbums")
-        self.apiClient.photosGetAlbums(class anonymous(AsyncCallback)():
-                                           
-                                           @java.typed(Throwable)
-                                           def onFailure(self, caught):
-                                               self.handleFailure(caught)
-                                           
-                                           @java.typed(List)
-                                           def onSuccess(self, result):
-                                               outer.remove(self.getLoader())
-                                               outer.add(HTML(u"Result Size: " + java.str(result.size())))
-                                               for a in result:
-                                                   html = java.str(java.str(u"<h2>Name: " + java.str(a.getName())) + u", Description: " + a.getDescription()) + u"</h2>"
-                                                   outer.add(HTML(html))
-                                                   if a.hasCover():
-                                                       outer.add(FbPhoto(a.getCoverPid(), Size.small))
-                                               Xfbml.parse(outer)) #  Call facebook
+        class _anonymous(AsyncCallback):
+            
+            @java.typed(Throwable)
+            def onFailure(self, caught):
+                self.handleFailure(caught)
+            
+            @java.typed(List)
+            def onSuccess(self, result):
+                outer.remove(self.getLoader())
+                outer.add(HTML(u"Result Size: " + java.str(result.size())))
+                for a in result:
+                    html = java.str(java.str(u"<h2>Name: " + java.str(a.getName())) + u", Description: " + a.getDescription()) + u"</h2>"
+                    outer.add(HTML(html))
+                    if a.hasCover():
+                        outer.add(FbPhoto(a.getCoverPid(), Size.small))
+                Xfbml.parse(outer)
+        self.apiClient.photosGetAlbums(_anonymous()) #  Call facebook
         self.initWidget(outer)

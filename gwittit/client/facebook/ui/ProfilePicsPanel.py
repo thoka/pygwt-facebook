@@ -56,13 +56,14 @@ class ProfilePicsPanel(Composite):
         self.renderProfilePics() #  Add list of fbprofilepics to the pics panel
         if uids.size() > PAGE_SIZE:
             self.outer.add(self.seeAllLink)
-        self.seeAllLink.addClickHandler(class anonymous(ClickHandler)():
-                                            
-                                            @java.typed(ClickEvent)
-                                            def onClick(self, event):
-                                                popup = ProfilePicsPopup(uids)
-                                                popup.center()
-                                                popup.show())
+        class _anonymous(ClickHandler):
+            
+            @java.typed(ClickEvent)
+            def onClick(self, event):
+                popup = ProfilePicsPopup(uids)
+                popup.center()
+                popup.show()
+        self.seeAllLink.addClickHandler(_anonymous())
         Xfbml.parse(self.pics)
         self.initWidget(self.outer)
     

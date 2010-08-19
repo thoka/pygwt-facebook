@@ -63,22 +63,24 @@ class Message_getThreadsInFolder(Showcase):
         Print a list with users mail folders
         """
         mailFolders.add(HTML(u"Go to folder: "))
-        self.apiClient.messageGetMailBoxFolders(class anonymous(AsyncCallback)():
-                                                    
-                                                    @java.typed(Throwable)
-                                                    def onFailure(self, caught):
-                                                        self.handleFailure(caught)
-                                                    
-                                                    @java.typed(List)
-                                                    def onSuccess(self, result):
-                                                        for mf in result:
-                                                            a = Anchor(mf.getName() + (( java.str(u"(" + java.str(mf.getUnreadCount())) + u")" if mf.getUnreadCount() > 0 else u"" )))
-                                                            a.addClickHandler(class anonymous(ClickHandler)():
-                                                                                  
-                                                                                  @java.typed(ClickEvent)
-                                                                                  def onClick(self, event):
-                                                                                      self.renderMessages(folderContent, mf.getFolderId()))
-                                                            mailFolders.add(a)) #  Get mailboxes, inbox output etc
+        class _anonymous(AsyncCallback):
+            
+            @java.typed(Throwable)
+            def onFailure(self, caught):
+                self.handleFailure(caught)
+            
+            @java.typed(List)
+            def onSuccess(self, result):
+                for mf in result:
+                    a = Anchor(mf.getName() + (( java.str(u"(" + java.str(mf.getUnreadCount())) + u")" if mf.getUnreadCount() > 0 else u"" )))
+                    class _anonymous(ClickHandler):
+                        
+                        @java.typed(ClickEvent)
+                        def onClick(self, event):
+                            self.renderMessages(folderContent, mf.getFolderId())
+                    a.addClickHandler(_anonymous())
+                    mailFolders.add(a)
+        self.apiClient.messageGetMailBoxFolders(_anonymous()) #  Get mailboxes, inbox output etc
     
     @java.private
     @java.typed(VerticalPanel, Integer)
@@ -88,33 +90,34 @@ class Message_getThreadsInFolder(Showcase):
         """
         addToContent.clear()
         self.addLoader(addToContent)
-        self.apiClient.messageGetThreadsInFolder(folderId, None, None, None, class anonymous(AsyncCallback)():
-                                                                                 
-                                                                                 @java.typed(Throwable)
-                                                                                 def onFailure(self, caught):
-                                                                                     self.handleFailure(caught)
-                                                                                 
-                                                                                 @java.typed(List)
-                                                                                 def onSuccess(self, result):
-                                                                                     self.removeLoader(addToContent)
-                                                                                     for mt in result:
-                                                                                         mtPnl = VerticalPanel()
-                                                                                         mtPnl.addStyleName(u"messageThread")
-                                                                                         header = u" From " + java.str(FbName(mt.getSnippetAuthorString()))
-                                                                                         header += u"<br>" + java.str(mt.getSnippet())
-                                                                                         header += u"<br/>ThreadId: " + java.str(mt.getThreadId())
-                                                                                         header += u"<br/>Messages in thread: " + java.str(mt.getMessageCountString())
-                                                                                         header += u"<br/>Unread: " + java.str(mt.getUnread())
-                                                                                         html = HTML(header)
-                                                                                         mtPnl.add(html)
-                                                                                         if mt.getUnread() > 0:
-                                                                                             messageArray = mt.getMessages()
-                                                                                             for i in range(0,messageArray.__len__()):
-                                                                                                 m = messageArray.get(i)
-                                                                                                 messageThread = VerticalPanel()
-                                                                                                 messageThread.addStyleName(u"messages")
-                                                                                                 messageThread.add(HTML(u"From  " + java.str(FbName(m.getAuthorId()))))
-                                                                                                 messageThread.add(HTML(m.getBody()))
-                                                                                                 mtPnl.add(messageThread)
-                                                                                         addToContent.add(mtPnl)
-                                                                                     Xfbml.parse(addToContent)) #  Render users messages filtered by folder id.
+        class _anonymous(AsyncCallback):
+            
+            @java.typed(Throwable)
+            def onFailure(self, caught):
+                self.handleFailure(caught)
+            
+            @java.typed(List)
+            def onSuccess(self, result):
+                self.removeLoader(addToContent)
+                for mt in result:
+                    mtPnl = VerticalPanel()
+                    mtPnl.addStyleName(u"messageThread")
+                    header = u" From " + java.str(FbName(mt.getSnippetAuthorString()))
+                    header += u"<br>" + java.str(mt.getSnippet())
+                    header += u"<br/>ThreadId: " + java.str(mt.getThreadId())
+                    header += u"<br/>Messages in thread: " + java.str(mt.getMessageCountString())
+                    header += u"<br/>Unread: " + java.str(mt.getUnread())
+                    html = HTML(header)
+                    mtPnl.add(html)
+                    if mt.getUnread() > 0:
+                        messageArray = mt.getMessages()
+                        for i in range(0,messageArray.__len__()):
+                            m = messageArray.get(i)
+                            messageThread = VerticalPanel()
+                            messageThread.addStyleName(u"messages")
+                            messageThread.add(HTML(u"From  " + java.str(FbName(m.getAuthorId()))))
+                            messageThread.add(HTML(m.getBody()))
+                            mtPnl.add(messageThread)
+                    addToContent.add(mtPnl)
+                Xfbml.parse(addToContent)
+        self.apiClient.messageGetThreadsInFolder(folderId, None, None, None, _anonymous()) #  Render users messages filtered by folder id.
